@@ -1,25 +1,59 @@
-import logo from './logo.svg';
+import React, { Component } from 'react'
+import Container from './Container'
+import Form from './Form'
 import './App.css';
 
-function App() {
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+    sightings: [],
+    error: ''
+    }
+  }
+
+
+  componentDidMount = () => {
+    fetch('http://localhost:3001/sightings')
+    .then((response) => response.json())
+    .then((data) => {
+      this.setState({
+        sightings: data
+      })
+    })
+    .catch((error) => {
+      this.setState({
+        error: `Sorry, we seem to be having a ${error.message}`
+      })
+    })
+  }
+
+  componentDidUpdate = () => {
+    fetch('http://localhost:3001/sightings')
+    .then((response) => response.json())
+    .then((data) => {
+      this.setState({
+        sightings: data
+      })
+    })
+    .catch((error) => {
+      this.setState({
+        error: `Sorry, we seem to be having a ${error.message}`
+      })
+    })
+    }
+  }
+
+  render() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Welcome to alien friend finder!</h1>
+      {!this.state.error && <h2>{this.state.error}</h2>}
+      <Form />
+      {!this.state.sightings && <Container sightings={this.state.sightings} />}
     </div>
-  );
+  )
+  }
 }
 
 export default App;
